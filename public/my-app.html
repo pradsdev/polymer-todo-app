@@ -1,0 +1,20 @@
+<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="import" href="bower_components/polymerfire/firebase-app.html">
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="login-page.html">
+<dom-module id="my-app">
+    <template>
+            <firebase-app
+            auth-domain="poly-fire-2708.firebaseapp.com"
+            database-url="https://poly-fire-2708.firebaseio.com/"
+            api-key="AIzaSyADa_5_BiuGiJSZb2fqXcfUHz63Ydom3Qg">
+          </firebase-app>
+
+          <login-page></login-page>
+    </template>
+    <script>
+        Polymer({
+            is: 'my-app'
+        });
+    </script>
+</dom-module>

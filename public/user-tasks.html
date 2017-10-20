@@ -1,0 +1,111 @@
+<link rel="import" href="bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="bower_components/paper-button/paper-button.html">
+<link rel="import" href="bower_components/paper-input/paper-input.html">
+
+
+<dom-module id="user-tasks">
+    <template>
+            <style include="iron-flex iron-flex-alignment">
+        #card{
+            margin-top: 80px;
+        }
+        #notes-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #notes-list .content{
+            padding: 8px;
+        }
+        #input{
+            width: 30%;
+        }
+        #tasks-controls{
+            padding-top: 20px;
+        }
+        #add{
+            background-color: #333;
+            color: #fff;
+        }
+        .data-input{
+            width: 15%;
+        }
+        </style>
+        <firebase-auth user="{{user}}"></firebase-auth>
+        <firebase-query
+        id="query"
+        path="/users/[[user.uid]]/tasks"
+        data="{{tasks}}"
+        ></firebase-query>
+        
+        <div id="card">
+            <div id="tasks">
+                <ul id="notes-list" class="Vertical layout center-justified">
+                    
+                    <template is="dom-repeat" items="[[tasks]]" as="task">
+                        <li class="horizontal layout center-justified">
+                            
+                            <paper-input id="my{{task.uid}}"
+                            task="[[task]]"
+                            class="data-input"
+                            value="{{task.content}}"
+                            ></paper-input>
+                            
+                            <!-- <paper-icon-button icon="clear" task="[[task]]" on-tap="saVe"></paper-icon-button> -->
+                            <paper-icon-button icon="delete" task="[[task]]" on-tap="remove"></paper-icon-button>
+                        </li>
+                    </template>
+                    
+                </ul>
+                <div class="horizontal layout center-justified">
+                        <paper-input id="input" label="Create a task...."></paper-input>
+                </div>
+                
+                <div id="tasks-controls" class=" horizontal layout center-justified">
+                    
+                    <paper-button id="add" on-tap="add">Create</paper-button>
+                    
+                </div>
+            </div>
+        </div>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'user-tasks',
+            properties: {
+                tasks: {
+                    type: Object
+                }
+            },
+            add: function(){
+                this.$.query.ref.push({
+                    content: this.$.input.value
+                });
+                this.$.input.value = null;
+            },
+            // saVe: function(e){
+            //     alert(task.content);
+            //     var a = document.getElementById('my{{task.uid}}').value;
+            //     alert(a);
+            //     // var keys = e.currentTarget.task.$key;
+            //     // this.$.query.ref.push({
+            //     //     content: this.$.input1.value
+            //     // });
+            //     // this.$.query.ref.child(keys).set({
+            //     //     content: this.$$('task').value
+            //     // });
+            // },
+            remove: function(e){
+
+                var key = e.currentTarget.task.$key;
+                this.$.query.ref.child(key).remove();
+            }
+        });
+    </script>
+</dom-module>
